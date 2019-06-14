@@ -20,11 +20,14 @@
     <header>
         <b>Logged in as:</b>
         <label th:text="${session.loggeduser.profile.fullName}"></label>
-
+        <a href="images/upload.html" th:href="@{/images/upload}">Upload Image</a>
         <form method="post" th:action="@{/users/logout}">
-            <a href="images/upload.html" th:href="@{/images/upload}">Upload Image</a>
             <input type="submit" value="Logout"/>
         </form>
+
+        <a th:href="@{/images}">
+            <h3>Image Hoster</h3>
+        </a>
     </header>
 </header>
 

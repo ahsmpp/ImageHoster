@@ -37,9 +37,7 @@ public class Tag {
         this.name = tagName;
     }
 
-   //Generate getters and setters for all the attributes
-
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 

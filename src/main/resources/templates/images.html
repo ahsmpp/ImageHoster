@@ -12,14 +12,20 @@
 <h1>Welcome <label th:text="${session.loggeduser.profile.fullName}"></label>. These are the images</h1>
 <main id="images">
     <post th:each="i : ${images}">
-
+        <p>
         <div>
             <img th:src="'data:image/jpeg;base64,'+${i.imageFile}"/>
         </div>
-        <a th:href="'/images/' + ${i.title}">
+
+        <a th:href="'/images/' +${i.id} +'/' +${i.title}">
             <h3 th:text="${i.title}">Title of image</h3>
         </a>
         <i>Posted On: </i> <span th:text="${i.date}"></span>
+        <br>
+        <i>Posted By: </i> <span th:text="${i.user.profile.fullName}"></span>
+        <br>
+        <hr>
+        </p>
     </post>
 </main>
 </body>

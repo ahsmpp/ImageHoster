@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Controller
@@ -40,9 +42,22 @@ public class UserController {
     //This controller method is called when the request pattern is of type 'users/registration' and also the incoming request is of POST type
     //This method calls the business logic and after the user record is persisted in the database, directs to login page
     @RequestMapping(value = "users/registration", method = RequestMethod.POST)
-    public String registerUser(User user) {
-        userService.registerUser(user);
-        return "redirect:/users/login";
+    public String registerUser(User user, Model model) {
+        //Checking if password meets required conditions
+        if(checkStrongPassword(user.getPassword())) {
+            userService.registerUser(user);
+            return "redirect:/users/login";
+        } else {
+            user = new User();
+            UserProfile profile = new UserProfile();
+            user.setProfile(profile);
+            model.addAttribute("User", user);
+
+            String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
+            model.addAttribute("passwordTypeError", error);
+
+            return "users/registration";
+        }
     }
 
     //This controller method is called when the request pattern is of type 'users/login'
@@ -69,10 +84,29 @@ public class UserController {
     //This controller method is called when the request pattern is of type 'users/logout' and also the incoming request is of POST type
     //The method receives the Http Session and the Model type object
     //session is invalidated
+    //All the images are fetched from the database and added to the model with 'images' as the key
+    //'index.html' file is returned showing the landing page of the application and displaying all the images in the application
     @RequestMapping(value = "users/logout", method = RequestMethod.POST)
     public String logout(Model model, HttpSession session) {
         session.invalidate();
 
+        /*List<Image> images = imageService.getAllImages();
+        model.addAttribute("images", images);
+        return "index";*/
+        //Using Home Controller Request Mapping
         return "redirect:/";
+    }
+
+    //Method to check if password contains atleast 1 alphabet, 1 number & 1 special character
+    private  boolean checkStrongPassword(String password) {
+        Pattern letter = Pattern.compile("[a-zA-z]");
+        Pattern digit = Pattern.compile("[0-9]");
+        Pattern special = Pattern.compile("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
+
+        Matcher hasLetter = letter.matcher(password);
+        Matcher hasDigit = digit.matcher(password);
+        Matcher hasSpecial = special.matcher(password);
+
+        return hasLetter.find() && hasDigit.find() && hasSpecial.find();
     }
 }
