@@ -117,7 +117,7 @@ public class ImageController {
             String error = "Only the owner of the image can edit the image";
             model.addAttribute("editError", error);
             model.addAttribute("tags", image.getTags());
-            model.addAttribute("comments", image.getComments());
+            model.addAttribute("comments", commentService.findComments(imageId));
 
             return "images/image";
         }
@@ -154,7 +154,7 @@ public class ImageController {
         updatedImage.setDate(new Date());
 
         imageService.updateImage(updatedImage);
-        return "redirect:/images/" + updatedImage.getTitle();
+        return "redirect:/images/" + updatedImage.getId() + "/" + updatedImage.getTitle();
     }
 
 
@@ -176,7 +176,7 @@ public class ImageController {
             String error = "Only the owner of the image can delete the image";
             model.addAttribute("deleteError", error);
             model.addAttribute("tags", image.getTags());
-            model.addAttribute("comments", image.getComments());
+            model.addAttribute("comments", commentService.findComments(imageId));
 
             return "images/image";
         }
@@ -195,7 +195,7 @@ public class ImageController {
 
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
-        model.addAttribute("comments", image.getComments());
+        model.addAttribute("comments", commentService.findComments(imageId));
         return "/images/image";
     }
 
