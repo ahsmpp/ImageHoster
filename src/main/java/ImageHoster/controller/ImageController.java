@@ -141,6 +141,7 @@ public class ImageController {
         String updatedImageData = convertUploadedFileToBase64(file);
         List<Tag> imageTags = findOrCreateTags(tags);
 
+        //Set new Image file if new one is uploaded, else use the existing image file
         if (updatedImageData.isEmpty())
             updatedImage.setImageFile(image.getImageFile());
         else {
@@ -182,6 +183,9 @@ public class ImageController {
         }
     }
 
+    //This controller method is called when the request pattern is of type '/image/{imageId}/{imageTitle}/comments' and also the incoming request is of POST type
+    //The method calls the addComment() method in the business logic passing the comment of the image to be persisted
+    //Looks for a controller method with request mapping of type '/images/image'
     @RequestMapping(value = "/image/{imageId}/{imageTitle}/comments", method = RequestMethod.POST)
     public String addComment(@PathVariable("imageId") Integer imageId, @RequestParam("comment") String newComment, Model model, HttpSession session) {
         Image image = imageService.getImage(imageId);
